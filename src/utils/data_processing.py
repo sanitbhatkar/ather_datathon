@@ -2,6 +2,7 @@ import pickle
 import pandas as pd
 from datetime import datetime
 from utils.common import parse_ot_to_hours
+import streamlit as st
 
 def load_pickle_to_dict(uploaded_file):
     """
@@ -16,6 +17,20 @@ def load_pickle_to_dict(uploaded_file):
     import pickle
     return pickle.load(uploaded_file)
 
+@st.cache_data
+def load_excel_to_dict(uploaded_file):
+    """
+    Load an Excel file into a dictionary where each sheet is a key-value pair.
+
+    Args:
+        uploaded_file (UploadedFile): Uploaded Excel file from Streamlit.
+
+    Returns:
+        dict: Dictionary with sheet names as keys and DataFrames as values.
+    """
+    return pd.read_excel(uploaded_file, sheet_name=None)
+
+@st.cache_data
 def prepare_attendance_data_by_filters(att_dict, vertical, department, function):
     """
     Filter attendance data by Vertical, Department, and Function.
@@ -53,6 +68,7 @@ def prepare_attendance_data_by_filters(att_dict, vertical, department, function)
 
     return grouped_data
 
+@st.cache_data
 def prepare_combined_data(att_dict, vertical, department):
     """
     Prepare combined metrics for Total Count, 'X', 'PP', and OT data.
@@ -96,6 +112,7 @@ def prepare_combined_data(att_dict, vertical, department):
 
     return total_counts, attendance_x, attendance_pp, ot_data
 
+@st.cache_data
 def analyze_vertical_department_ot_data(att_dict):
     """
     Analyze OT data grouped by Vertical and Department.

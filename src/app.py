@@ -3,7 +3,8 @@ from utils.plotting import plot_combined_metrics, plot_vertical_department_ot_cl
 from utils.filters import update_filters
 import pandas as pd
 from utils.data_processing import (
-    load_pickle_to_dict,
+    # load_pickle_to_dict,
+    load_excel_to_dict,
     prepare_attendance_data_by_filters,
     prepare_combined_data,
     analyze_vertical_department_ot_data
@@ -12,10 +13,10 @@ from utils.data_processing import (
 def main():
     st.title("EDA Dashboard for Attendance and OT Analysis")
 
-    # Load the data
-    uploaded_file = st.file_uploader("Upload Cleaned Attendance Data (Pickle File):", type="pkl")
+    # Load the Excel file
+    uploaded_file = st.file_uploader("Upload Cleaned Attendance Data (Excel File):", type="xlsx")
     if uploaded_file is not None:
-        att_dict = load_pickle_to_dict(uploaded_file)
+        att_dict = load_excel_to_dict(uploaded_file)
         st.success("Data successfully loaded.")
 
         # Sidebar filters
@@ -44,7 +45,10 @@ def main():
         # OT Data Analysis
         st.header("OT Data Analysis")
         overall_ot_summary, department_monthly_ot_summary = analyze_vertical_department_ot_data(att_dict)
-        plot_vertical_department_ot_clean(overall_ot_summary, department_monthly_ot_summary, vertical, department, function)
+        if vertical != "All":
+            plot_vertical_department_ot_clean(overall_ot_summary, department_monthly_ot_summary, vertical, department, function)
 
 if __name__ == "__main__":
     main()
+
+
